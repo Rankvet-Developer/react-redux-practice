@@ -1,16 +1,17 @@
 import cancelImage from "../assets/images/cancel.png";
-import { useDeleteTodoMutation } from '../features/api/apiSlice';
+import { useDeleteTodoMutation, useToogleTodoMutation } from '../features/api/apiSlice';
 
 export default function Todo({ todo }) {
 
-    const [deleteTodo,{isLoading,isError}] = useDeleteTodoMutation()
+    const [deleteTodo] = useDeleteTodoMutation();
+    const [toogleTodo,] = useToogleTodoMutation();
 
 
     const { text, id, completed, color } = todo;
 
-    // const handleStatusChange = (todoId) => {
-    //     dispatch(updateStatus(todoId, completed));
-    // };
+    const handleStatusChange = (todoId) => {
+        toogleTodo({id: todoId,toogleValue: completed});
+    };
 
     // const handleColorChange = (todoId, color) => {
     //     dispatch(updateColor(todoId, color));
@@ -31,7 +32,7 @@ export default function Todo({ todo }) {
                 <input
                     type="checkbox"
                     checked={completed}
-                    // onChange={() => handleStatusChange(id)}
+                    onChange={() => handleStatusChange(id)}
                     className="opacity-0 absolute rounded-full"
                 />
                 {completed && (

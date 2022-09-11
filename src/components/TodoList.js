@@ -6,6 +6,7 @@ export default function TodoList() {
     const {data:todos,isLoading,isError} = useGetTodosQuery();
 
     let content = null;
+    
     // decide what to render 
     if(isLoading){
         content = <div>Loading...</div>

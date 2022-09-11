@@ -34,6 +34,15 @@ export const apiSlice = createApi({
                 url: `/todos/${id}`,
                 method: "DELETE"
             })
+        }),
+        toogleTodo: builder.mutation({
+            query:({id,toogleValue}) => ({
+                url: `/todos/${id}`,
+                method: "PATCH",
+                body:{
+                    completed: !toogleValue
+                }
+            })
         })
     })
 })
@@ -42,5 +51,6 @@ export const {
     useAddTodoMutation,
     useGetTodosQuery,
     useUpdateTodoMutation,
-    useDeleteTodoMutation
+    useDeleteTodoMutation,
+    useToogleTodoMutation
 } = apiSlice;
