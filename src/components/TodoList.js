@@ -1,51 +1,52 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useGetTodosQuery } from "../features/api/apiSlice";
-import fetchTodos from "../redux/todos/thunk/fetchTodos";
 import Todo from "./Todo";
 
 export default function TodoList() {
     // use rtk query
     const {data:todos,isLoading,isError} = useGetTodosQuery();
 
-    // const todos = useSelector((state) => state.todos);
-    const filters = useSelector((state) => state.filters);
-    const dispatch = useDispatch();
+    let content = null;
+    // decide what to render 
+    if(isLoading){
+        content = <div>Loading...</div>
+    }
 
-    useEffect(() => {
-        dispatch(fetchTodos);
-    }, [dispatch]);
+    if(!isLoading && isError){
+        content = <div>Error occurs...</div>
+    }
 
-    const filterByStatus = (todo) => {
-        const { status } = filters;
-        switch (status) {
-            case "Complete":
-                return todo.completed;
+    if(!isLoading && !isError && todos.length > 0){
+        content = todos
+                    .map((todo) => (
+                        <Todo todo={todo} key={todo.id} />
+                    ))
+    }
 
-            case "Incomplete":
-                return !todo.completed;
+    // const filterByStatus = (todo) => {
+    //     const { status } = filters;
+    //     switch (status) {
+    //         case "Complete":
+    //             return todo.completed;
 
-            default:
-                return true;
-        }
-    };
+    //         case "Incomplete":
+    //             return !todo.completed;
 
-    const filterByColors = (todo) => {
-        const { colors } = filters;
-        if (colors.length > 0) {
-            return colors.includes(todo?.color);
-        }
-        return true;
-    };
+    //         default:
+    //             return true;
+    //     }
+    // };
+
+    // const filterByColors = (todo) => {
+    //     const { colors } = filters;
+    //     if (colors.length > 0) {
+    //         return colors.includes(todo?.color);
+    //     }
+    //     return true;
+    // };
 
     return (
         <div className="mt-2 text-gray-700 text-sm max-h-[300px] overflow-y-auto">
-            {todos
-                .filter(filterByStatus)
-                .filter(filterByColors)
-                .map((todo) => (
-                    <Todo todo={todo} key={todo.id} />
-                ))}
+            {content}
         </div>
     );
 }
