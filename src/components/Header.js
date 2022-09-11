@@ -3,10 +3,14 @@ import { useDispatch } from "react-redux";
 import tickImage from "../assets/images/double-tick.png";
 import noteImage from "../assets/images/notes.png";
 import plusImage from "../assets/images/plus.png";
+import { useAddTodoMutation } from "../features/api/apiSlice";
 import { allCompleted, clearCompleted } from "../redux/todos/actions";
-import addTodo from "../redux/todos/thunk/addTodo";
 
 export default function Header() {
+
+    // use rtk query
+    const [addTodo,{isLoading,isError,isSuccess}] = useAddTodoMutation();
+
     const dispatch = useDispatch();
     const [input, setInput] = useState("");
 
@@ -16,11 +20,11 @@ export default function Header() {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(addTodo(input));
+        addTodo(input);
         setInput("");
     };
 
-    const completeHadler = () => {
+    const completeHandler = () => {
         dispatch(allCompleted());
     };
 
@@ -51,7 +55,7 @@ export default function Header() {
             <ul className="flex justify-between my-4 text-xs text-gray-500">
                 <li
                     className="flex space-x-1 cursor-pointer"
-                    onClick={completeHadler}
+                    onClick={completeHandler}
                 >
                     <img className="w-4 h-4" src={tickImage} alt="Complete" />
                     <span>Complete All Tasks</span>
