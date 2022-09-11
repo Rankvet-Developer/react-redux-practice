@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     status: "All",
-    colors: []
+    colors: [],
+    todo: {},
+    modal: false
 }
 
 const filterSlice = createSlice({
@@ -17,6 +19,12 @@ const filterSlice = createSlice({
         },
         removeColor: (state,action) => {
             state.colors = state.colors.filter(existingColor => existingColor !== action.payload);
+        },
+        setTodo: (state,action) => {
+            state.todo = action.payload;
+        },
+        setModal: (state,action) => {
+            state.modal = action.payload;
         }
     }
 })
@@ -24,7 +32,9 @@ const filterSlice = createSlice({
 export const {
     setStatus,
     addColor,
-    removeColor
+    removeColor,
+    setTodo,
+    setModal
 } = filterSlice.actions;
 
 export default filterSlice.reducer;

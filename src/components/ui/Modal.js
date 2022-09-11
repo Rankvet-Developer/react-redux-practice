@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useUpdateTodoMutation } from '../../features/api/apiSlice';
+import { setModal } from '../../features/filter/filterSlice';
 
 const CancelSvg = () => (
     <>
@@ -8,21 +11,46 @@ const CancelSvg = () => (
 )
 
 export default function Modal() {
+
+    const [updateTodo] = useUpdateTodoMutation();
+
+    const {todo} = useSelector(state => state.filter);
+    const dispatch = useDispatch();
+    const [text,setText] = useState(todo?.text);
+
+    const handleChange = (value) => {
+        setText(value);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        const newTodo = {...todo,text: text};
+        updateTodo({
+            id: todo?.id,
+            data: newTodo
+        })
+
+        dispatch(setModal(false));
+    }
+
   return (
         <div className="bg-slate-800 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
             <div className="relative p-4 w-full max-w-md h-full md:h-auto">
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="authentication-modal">
+                    <button onClick={() => dispatch(setModal(false))} type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="authentication-modal">
                         <CancelSvg/>
                     </button>
                     <div className="py-6 px-6 lg:px-8">
                         <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">Update the todo</h3>
-                        <form className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                {/* <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your email</label> */}
-                                <input type="text" name="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required/>
+                                
+                                <input type="text" name="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={text} required onChange={(e) => handleChange(e.target.value)}/>
 
-                                <input className='px-4 py-2 bg-sky-500 rounded-full text-white' type="submit" value="update" />
+                                <div className='text-center'>
+                                    <input className='px-4 py-2 bg-sky-500 rounded-full text-white mt-3 focus-outline-none cursor-pointer' type="submit" value="update" />
+                                </div>
                             </div>
                         </form>
                     </div>

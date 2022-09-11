@@ -13,8 +13,6 @@ export const apiSlice = createApi({
                 if(data){
                     const {status,colors} = data;
 
-                    console.log(data);
-
                     if(status !== ""){
                         if(status === "All"){
                             queryString = "";
@@ -38,13 +36,10 @@ export const apiSlice = createApi({
                 }
             },
             providesTags: (result,error,arg) => {
-                // console.log(result);
                 return [
                     "Todos",
-                    // {type:"Todos",id: arg.id}
                 ]
             }
-            // invalidatesTags: ["Todos"]
         }),
         addTodo: builder.mutation({
             query: (data) => ({
@@ -62,7 +57,8 @@ export const apiSlice = createApi({
                 url: `/todos/${id}`,
                 method: "PATCH",
                 body: data
-            })
+            }),
+            invalidatesTags: ["Todos"]
         }),
         deleteTodo: builder.mutation({
             query: (id) => ({

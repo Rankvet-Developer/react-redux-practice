@@ -1,5 +1,9 @@
+import { useDispatch } from "react-redux";
 import cancelImage from "../assets/images/cancel.png";
+import editImage from '../assets/images/edit.png';
+
 import { useDeleteTodoMutation, useToogleTodoMutation, useUpdateTodoColorMutation } from '../features/api/apiSlice';
+import { setModal, setTodo } from "../features/filter/filterSlice";
 
 export default function Todo({ todo }) {
 
@@ -7,6 +11,7 @@ export default function Todo({ todo }) {
     const [toogleTodo,] = useToogleTodoMutation();
     const [updateTodoColor] = useUpdateTodoColorMutation();
 
+    const dispatch = useDispatch();
 
     const { text, id, completed, color } = todo;
 
@@ -17,6 +22,11 @@ export default function Todo({ todo }) {
     const handleColorChange = (todoId, color) => {
         updateTodoColor({id: todoId, color});
     };
+
+    const handleEdit = (todo) => {
+        dispatch(setTodo(todo));
+        dispatch(setModal(true));
+    }
 
     const handleDelete = (todoId) => {
         deleteTodo(todoId);
@@ -72,13 +82,19 @@ export default function Todo({ todo }) {
                 }`}
                 onClick={() => handleColorChange(id, "red")}
             ></div>
-
+            <img 
+                src={editImage} 
+                className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
+                alt="edit" 
+                onClick={() => handleEdit(todo)}
+            />
             <img
                 src={cancelImage}
                 className="flex-shrink-0 w-4 h-4 ml-2 cursor-pointer"
                 alt="Cancel"
                 onClick={() => handleDelete(id)}
             />
+
         </div>
     );
 }
