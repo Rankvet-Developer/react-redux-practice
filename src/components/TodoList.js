@@ -4,7 +4,7 @@ import Todo from "./Todo";
 export default function TodoList() {
     // use rtk query
     const {data:todos,isLoading,isError} = useGetTodosQuery();
-
+    
     let content = null;
     
     // decide what to render 

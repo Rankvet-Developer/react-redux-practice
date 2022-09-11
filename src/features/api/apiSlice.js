@@ -21,7 +21,7 @@ export const apiSlice = createApi({
                             queryString = "completed=false&";
                         }
                         if(status === "Complete"){
-                            queryString = "completed=false&";
+                            queryString = "completed=true&";
                         }
                     }
 
@@ -35,7 +35,14 @@ export const apiSlice = createApi({
                     method: 'get'
                 }
             },
-            providesTags: ["Todos"]
+            providesTags: (result,error,arg) => {
+                console.log(result);
+                return [
+                    "Todos",
+                    {type:"Todos",id: arg.id}
+                ]
+            }
+            // invalidatesTags: ["Todos"]
         }),
         addTodo: builder.mutation({
             query: (data) => ({
