@@ -1,10 +1,11 @@
 import cancelImage from "../assets/images/cancel.png";
-import { useDeleteTodoMutation, useToogleTodoMutation } from '../features/api/apiSlice';
+import { useDeleteTodoMutation, useToogleTodoMutation, useUpdateTodoColorMutation } from '../features/api/apiSlice';
 
 export default function Todo({ todo }) {
 
     const [deleteTodo] = useDeleteTodoMutation();
     const [toogleTodo,] = useToogleTodoMutation();
+    const [updateTodoColor] = useUpdateTodoColorMutation();
 
 
     const { text, id, completed, color } = todo;
@@ -13,9 +14,9 @@ export default function Todo({ todo }) {
         toogleTodo({id: todoId,toogleValue: completed});
     };
 
-    // const handleColorChange = (todoId, color) => {
-    //     dispatch(updateColor(todoId, color));
-    // };
+    const handleColorChange = (todoId, color) => {
+        updateTodoColor({id: todoId, color});
+    };
 
     const handleDelete = (todoId) => {
         deleteTodo(todoId);
@@ -55,21 +56,21 @@ export default function Todo({ todo }) {
                 className={`flex-shrink-0 h-4 w-4 rounded-full border-2 ml-auto cursor-pointer hover:bg-green-500 border-green-500 ${
                     color === "green" && "bg-green-500"
                 }`}
-                // onClick={() => handleColorChange(id, "green")}
+                onClick={() => handleColorChange(id, "green")}
             ></div>
 
             <div
                 className={`flex-shrink-0 h-4 w-4 rounded-full border-2 ml-auto cursor-pointer hover:bg-yellow-500 border-yellow-500 ${
                     color === "yellow" && "bg-yellow-500"
                 }`}
-                // onClick={() => handleColorChange(id, "yellow")}
+                onClick={() => handleColorChange(id, "yellow")}
             ></div>
 
             <div
                 className={`flex-shrink-0 h-4 w-4 rounded-full border-2 ml-auto cursor-pointer hover:bg-red-500 border-red-500 ${
                     color === "red" && "bg-red-500"
                 }`}
-                // onClick={() => handleColorChange(id, "red")}
+                onClick={() => handleColorChange(id, "red")}
             ></div>
 
             <img
