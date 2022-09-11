@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetTodosQuery } from "../features/api/apiSlice";
+import { addColor, removeColor, setStatus } from "../features/filter/filterSlice";
 
 const numberOfTodos = (no_of_todos) => {
     switch (no_of_todos) {
@@ -14,10 +15,10 @@ const numberOfTodos = (no_of_todos) => {
 
 export default function Footer() {
 
-    const [status,setStatus] = useState("All");
-    const [colors,setColors] = useState([]);
+    const {status,colors} = useSelector(state => state.filter);
+    const dispatch = useDispatch();
 
-    const {data:todos,isSuccess} = useGetTodosQuery({status: status,colors: colors});
+    const {data:todos,isSuccess} = useGetTodosQuery();
 
     // const filters = useSelector((state) => state.filters);
 
@@ -26,19 +27,14 @@ export default function Footer() {
 
     const handleStatusChange = (statusName) => {
         console.log(statusName);
-        setStatus(statusName);
+        dispatch(setStatus(statusName));
     };
 
     const handleColorChange = (color) => {
         if (colors.includes(color)) {
-            // remove color
-            setColors(() => {
-                return [...colors].filter(existingColor => existingColor !== color)
-            })
+            dispatch(removeColor(color));
         } else {
-            // add color...
-            const newColors = [...colors,color];
-            setColors(newColors);
+           dispatch(addColor(color));
         }
     };
 

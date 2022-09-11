@@ -1,9 +1,13 @@
+import { useSelector } from "react-redux";
 import { useGetTodosQuery } from "../features/api/apiSlice";
 import Todo from "./Todo";
 
 export default function TodoList() {
+
+    const {status,colors} = useSelector(state => state.filter);
+
     // use rtk query
-    const {data:todos,isLoading,isError} = useGetTodosQuery();
+    const {data:todos,isLoading,isError} = useGetTodosQuery({status: status,colors: colors});
     
     let content = null;
     
