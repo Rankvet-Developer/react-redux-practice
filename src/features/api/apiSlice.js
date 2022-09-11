@@ -5,20 +5,28 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8000"
     }),
+    tagTypes: ["Todos"],
     endpoints: (builder) => ({
         getTodos: builder.query({
-            query: (status="") => {
+            query: (data) => {
                 let queryString = "";
+                if(data){
+                    const {status,colors} = data;
 
-                if(status !== ""){
-                    if(status === "All"){
-                        queryString = "";
+                    if(status !== ""){
+                        if(status === "All"){
+                            queryString = "";
+                        }
+                        if(status === "Incomplete"){
+                            queryString = "completed=false&";
+                        }
+                        if(status === "Complete"){
+                            queryString = "completed=false&";
+                        }
                     }
-                    if(status === "Incomplete"){
-                        queryString = "completed=false";
-                    }
-                    if(status === "Complete"){
-                        queryString = "completed=false";
+
+                    if(colors.length > 0){
+                        queryString += colors.map(color => `color=${color}`).join("&");
                     }
                 }
 
@@ -26,7 +34,8 @@ export const apiSlice = createApi({
                     url: `/todos?${queryString}`,
                     method: 'get'
                 }
-            }
+            },
+            providesTags: ["Todos"]
         }),
         addTodo: builder.mutation({
             query: (data) => ({
@@ -36,7 +45,8 @@ export const apiSlice = createApi({
                     text: data,
                     completed: false,
                 }
-            })
+            }),
+            invalidatesTags: ["Todos"]
         }),
         updateTodo: builder.mutation({
             query: ({id,data}) => ({
@@ -49,7 +59,8 @@ export const apiSlice = createApi({
             query: (id) => ({
                 url: `/todos/${id}`,
                 method: "DELETE"
-            })
+            }),
+            invalidatesTags: ["Todos"]
         }),
         toogleTodo: builder.mutation({
             query:({id,toogleValue}) => ({
@@ -58,7 +69,8 @@ export const apiSlice = createApi({
                 body:{
                     completed: !toogleValue
                 }
-            })
+            }),
+            invalidatesTags: ["Todos"]
         }),
         updateTodoColor: builder.mutation({
             query: ({id,color}) => ({
