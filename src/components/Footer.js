@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useGetTodosQuery } from "../features/api/apiSlice";
 
 const numberOfTodos = (no_of_todos) => {
@@ -13,16 +14,18 @@ const numberOfTodos = (no_of_todos) => {
 
 export default function Footer() {
 
-    const {data:todos,isSuccess} = useGetTodosQuery();
+    const [status,setStatus] = useState("All");
+
+    const {data:todos,isSuccess} = useGetTodosQuery(status);
 
     // const filters = useSelector((state) => state.filters);
 
     const todosRemaining = isSuccess && todos.filter((todo) => !todo.completed).length;
     // const { status, colors } = filters;
 
-    // const handleStatusChange = (status) => {
-    //     dispatch(statusChanged(status));
-    // };
+    const handleStatusChange = (statusName) => {
+        setStatus(statusName);
+    };
 
     // const handleColorChange = (color) => {
     //     if (colors.includes(color)) {
@@ -40,7 +43,7 @@ export default function Footer() {
                     // className={`cursor-pointer ${
                     //     status === "All" && "font-bold"
                     // }`}
-                    // onClick={() => handleStatusChange("All")}
+                    onClick={() => handleStatusChange("All")}
                 >
                     All
                 </li>
@@ -49,7 +52,7 @@ export default function Footer() {
                     // className={`cursor-pointer ${
                     //     status === "Incomplete" && "font-bold"
                     // }`}
-                    // onClick={() => handleStatusChange("Incomplete")}
+                    onClick={() => handleStatusChange("Incomplete")}
                 >
                     Incomplete
                 </li>
@@ -58,7 +61,7 @@ export default function Footer() {
                     // className={`cursor-pointer ${
                     //     status === "Complete" && "font-bold"
                     // }`}
-                    // onClick={() => handleStatusChange("Complete")}
+                    onClick={() => handleStatusChange("Complete")}
                 >
                     Complete
                 </li>

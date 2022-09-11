@@ -7,10 +7,26 @@ export const apiSlice = createApi({
     }),
     endpoints: (builder) => ({
         getTodos: builder.query({
-            query: () => ({
-                url: '/todos',
-                method: 'get'
-            })
+            query: (status="") => {
+                let queryString = "";
+
+                if(status !== ""){
+                    if(status === "All"){
+                        queryString = "";
+                    }
+                    if(status === "Incomplete"){
+                        queryString = "completed=false";
+                    }
+                    if(status === "Complete"){
+                        queryString = "completed=false";
+                    }
+                }
+
+                return {
+                    url: `/todos?${queryString}`,
+                    method: 'get'
+                }
+            }
         }),
         addTodo: builder.mutation({
             query: (data) => ({
@@ -46,11 +62,18 @@ export const apiSlice = createApi({
         }),
         updateTodoColor: builder.mutation({
             query: ({id,color}) => ({
-                url: `todos/${id}`,
+                url: `/todos/${id}`,
                 method: "PATCH",
                 body:{
                     color: color
                 }
+            })
+        }),
+        completeAllTodo: builder.mutation({
+            query: (data) => ({
+                url: "/todos",
+                method: "PATCH",
+                body: data
             })
         })
     })
